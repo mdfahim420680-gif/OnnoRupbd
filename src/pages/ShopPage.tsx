@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { AlertTriangle, CheckCircle2, Filter, RefreshCw, SlidersHorizontal, X } from 'lucide-react';
 import { apiRequest, isAbortError } from '../services/api';
 import { useAppSelector } from '../app/hooks';
@@ -37,6 +37,7 @@ interface DynamicFilterFacet {
 }
 
 export function ShopPage() {
+  const location = useLocation();
   const { slug: categoryParam } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const storefront = useAppSelector((s) => s.storefront);
@@ -72,6 +73,10 @@ export function ShopPage() {
   const [categories, setCategories] = useState<CategoryItem[]>(storefront.categories || []);
   const [brands, setBrands] = useState<BrandItem[]>(storefront.brands || []);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileFiltersOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!mobileFiltersOpen) return;
@@ -256,6 +261,7 @@ export function ShopPage() {
           <li>
             <Link
               to="/shop"
+              onClick={() => setMobileFiltersOpen(false)}
               className={`block rounded-lg px-2.5 py-1.5 ${
                 !categoryParam ? 'bg-[#E9F0FD] font-semibold text-[#1155EE]' : 'text-slate-600 hover:bg-slate-100'
               }`}
@@ -269,6 +275,7 @@ export function ShopPage() {
               <li key={cat.id}>
                 <Link
                   to={`/category/${cat.slug}`}
+                  onClick={() => setMobileFiltersOpen(false)}
                   className={`block rounded-lg px-2.5 py-1.5 ${
                     categoryParam === cat.slug
                       ? 'bg-[#E9F0FD] font-semibold text-[#1155EE]'
