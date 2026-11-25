@@ -1,0 +1,1013 @@
+# MASTER IMPLEMENTATION PROMPT — NOVARA GLOBAL PREMIUM PROMOTIONAL MODAL ADVERTISEMENT SYSTEM
+
+## ROLE
+
+Act as a Senior Full-Stack Software Architect, Principal React/TypeScript Engineer, Node.js Backend Engineer, MongoDB Database Architect, UI/UX Designer, and Production QA Engineer.
+
+Your task is to carefully inspect the existing NOVARA e-commerce repository and implement a new, fully functional, production-ready Global Promotional Popup Advertisement System.
+
+This is an extension of an existing production-oriented e-commerce application, NOT a new project and NOT a redesign.
+
+Follow existing architecture, coding conventions, component structure, API patterns, authentication, authorization, database models, design system, and deployment configuration.
+
+---
+
+# 1. MOST IMPORTANT: PRESERVE THE EXISTING PROJECT
+
+Before writing or modifying any code:
+
+1. Inspect the complete repository structure.
+2. Read the existing frontend architecture.
+3. Read the backend architecture and API routes.
+4. Inspect MongoDB/Mongoose models and existing database relationships.
+5. Inspect the current Admin Dashboard.
+6. Locate and understand the existing Advertisement Management functionality.
+7. Inspect existing image upload and Cloudinary integration.
+8. Inspect authentication, admin RBAC, and authorization middleware.
+9. Understand the current routing system and global application layout.
+10. Identify reusable components, modal systems, toast notifications, and existing design tokens.
+
+Prepare an internal implementation plan based on the actual repository.
+
+### Strict Preservation Rules
+
+- DO NOT replace the existing Advertisement Management system.
+- DO NOT remove existing advertisement features.
+- DO NOT redesign the Admin Dashboard.
+- DO NOT change existing page designs.
+- DO NOT change existing URLs or routes.
+- DO NOT rename existing components, functions, APIs, or database fields unnecessarily.
+- DO NOT modify unrelated business logic.
+- DO NOT replace existing authentication or authorization.
+- DO NOT break existing product, category, brand, cart, wishlist, checkout, order, coupon, or payment functionality.
+- DO NOT create duplicate components or duplicate API systems when reusable infrastructure already exists.
+- DO NOT perform destructive database migrations or reset existing collections.
+- DO NOT introduce mock APIs, fake data, simulated database persistence, or frontend-only functionality.
+
+Implement only the functionality required for the new advertisement system.
+
+The existing Advertisement System and the new Global Promotional Popup System must coexist independently.
+
+If an existing file needs modification, make the smallest possible targeted change.
+
+---
+
+# 2. NEW SYSTEM: GLOBAL PREMIUM PROMOTIONAL POPUP
+
+Create a separate advertisement type named:
+
+**Global Promotional Popup / Premium Promotional Modal**
+
+This advertisement must appear as a premium, centered modal overlay across the customer-facing NOVARA storefront.
+
+It must be independent of existing homepage banners, hero sliders, advertisements, and promotional sections.
+
+### Display behavior
+
+- The modal must be globally available across customer-facing storefront routes.
+- It must not depend on the homepage component being mounted.
+- It must work with the existing application layout and routing architecture.
+- It must appear only once per browser tab session for the relevant campaign.
+- It must not repeatedly reopen during internal navigation.
+- It must not reopen after a customer dismisses it during the same session.
+- When the browser tab/session is closed and the customer starts a new session, the advertisement can appear again.
+- It must be controlled entirely through Admin Dashboard settings.
+
+Do not create multiple modal instances when navigating between pages.
+
+Mount the modal using the appropriate existing global application layout or root-level provider.
+
+Do not create an additional independent application root.
+
+---
+
+# 3. AUTOMATIC DISPLAY TIMING
+
+Default initial display delay:
+
+**20 seconds**
+
+Implementation requirements:
+
+1. Customer visits the website.
+2. Wait until the application is ready and interactive.
+3. Start a 20-second timer.
+4. After 20 seconds, check whether the campaign is active, eligible, and not already dismissed or shown in the current session.
+5. Display the promotional modal with a premium entrance animation.
+
+Use sessionStorage for session-level display tracking and dismissal.
+
+Use unique campaign identifiers in storage keys so different campaigns can be managed independently.
+
+Recommended session states:
+
+- campaign_shown
+- campaign_dismissed
+
+Important behavior:
+
+- Once the campaign has appeared, it must not appear again in the same session, even after refresh.
+- Once dismissed, it must stay dismissed for the remainder of that session.
+- A newly started browser tab session must be eligible to see the campaign again.
+- Internal route changes must never restart the 20-second timer.
+- Properly clear timers and event listeners during unmount.
+- Prevent duplicate timers and race conditions.
+- Handle unavailable browser storage safely without crashing the application.
+
+Do not use localStorage for permanent dismissal.
+
+### Admin-configurable timing
+
+Allow administrators to configure:
+
+- Display delay in seconds (default: 20).
+- Enable/disable automatic popup.
+- Campaign start date and time.
+- Campaign end date and time.
+- Campaign priority.
+- Active campaign selection.
+
+If the campaign is inactive, expired, scheduled for the future, or disabled, do not display it.
+
+Use server-side campaign eligibility as the source of truth.
+
+---
+
+# 4. EXACT PREMIUM DESIGN DIRECTION
+
+The promotional modal must follow the visual direction of a premium international e-commerce advertisement.
+
+Create an original design based on the following detailed visual specification.
+
+IMPORTANT: The design description below is the complete visual reference. Do not depend on an external reference image.
+
+## Overall Modal
+
+- Large centered rectangular modal.
+- Approximately 94–96% viewport width on desktop.
+- Maximum width approximately 1420px.
+- Premium rounded corners (approximately 28–32px).
+- White and very light blue background.
+- Electric Blue primary color: #145CFF.
+- Dark Navy typography: #15213B.
+- Light background: #F4F6FA.
+- Rich blue gradient decorative shapes.
+- Subtle shadows and depth.
+- Thin, elegant border.
+- High-quality commercial advertising appearance.
+
+The modal should look like a professionally designed product campaign, not a standard website dialog.
+
+## Background Overlay
+
+When the modal opens:
+
+- Add a full-viewport backdrop overlay.
+- Apply dark translucent background.
+- Apply a noticeable backdrop blur to the underlying website.
+- Keep the advertisement visually prominent.
+- Prevent accidental interaction with the background.
+- Preserve appropriate scroll locking.
+- Restore scrolling correctly when closed.
+
+## Top-Left Offer Badge
+
+Display a prominent blue pill-shaped badge.
+
+Example:
+
+"Limited Time Offer"
+
+Include a flame icon.
+
+The badge must have:
+- Electric blue gradient.
+- White text.
+- Rounded pill shape.
+- Soft shadow.
+- Premium icon alignment.
+
+All text and icon properties must be editable.
+
+## Left Main Content
+
+Add a small uppercase promotional tagline with letter spacing.
+
+Example:
+
+"SMARTER • HEALTHIER • STYLISH"
+
+Below it, add a large two-line product headline.
+
+Example:
+
+"Next-Gen
+Smart Watch"
+
+Typography:
+- Large, bold, modern sans-serif.
+- Dark Navy for the first line.
+- Electric Blue for the emphasized second line.
+- Responsive font sizing.
+- Carefully controlled line height.
+
+Add a short product description below the heading.
+
+Example:
+
+"Track your health, stay connected, and live smarter every day."
+
+The headline, highlighted text, tagline, and description must be independently editable.
+
+## Product Feature Grid
+
+Create six editable feature items in a two-row, three-column layout on desktop.
+
+Example features:
+
+1. Heart Rate Monitoring
+2. 100+ Sports Modes
+3. 5ATM Waterproof
+4. Smart Notifications
+5. Up to 14 Days Battery Life
+6. Sleep Tracking
+
+Each item must have:
+- Circular light-blue icon background.
+- Blue icon.
+- Editable title.
+- Optional short description.
+- Configurable visibility.
+- Configurable display order.
+
+Allow administrators to add, edit, delete, and reorder feature items.
+
+Use an existing icon library if available.
+
+## Right-Side Product Showcase
+
+The right section must feature a large, premium, photorealistic 3D product showcase.
+
+Example visual direction:
+
+Two premium smartwatches:
+- One large black smartwatch in the foreground.
+- One white smartwatch behind it.
+- Realistic glass display.
+- Detailed straps.
+- High-quality product lighting.
+- Subtle reflections.
+- Professional studio rendering.
+- Blue circular geometric background.
+- Glossy blue-and-white product pedestal.
+
+The product must occupy the majority of the right section.
+
+The artwork must look like an actual high-end e-commerce advertising campaign.
+
+### Image management
+
+Administrators must be able to:
+
+- Upload a product showcase image.
+- Replace an existing image.
+- Remove an image.
+- Preview the image.
+- Set image position and fit.
+- Configure desktop and mobile images independently when required.
+
+If the project already supports image generation through a real image-generation provider, reuse that integration where appropriate.
+
+Do not invent an image-generation API.
+
+If image generation is unavailable, provide an upload-based workflow using the existing Cloudinary infrastructure.
+
+Store actual image URLs and metadata in MongoDB, not image binaries or base64 strings.
+
+### Important text-rendering rule
+
+Do not bake editable promotional text into the product image.
+
+Product artwork should be a separate visual asset. All headlines, descriptions, badges, features, prices, countdowns, and buttons must remain real editable frontend elements.
+
+This ensures every campaign can be customized without regenerating the entire artwork.
+
+## Discount Badge
+
+Position a premium circular/scalloped blue discount badge in the upper-right area.
+
+Example:
+
+"UP TO
+50%
+OFF"
+
+Requirements:
+- Bright yellow percentage.
+- White supporting text.
+- Blue gradient background.
+- Decorative circular edge.
+- Subtle glowing effect.
+- Editable percentage and text.
+- Optional visibility control.
+
+## Bottom Offer and Pricing Section
+
+Create a dedicated horizontal promotional pricing area.
+
+### Countdown Timer
+
+Display:
+
+"Offer Ends In:"
+
+Show four separate timer blocks:
+
+- Days
+- Hours
+- Minutes
+- Seconds
+
+Requirements:
+- Real countdown calculated from the campaign expiration timestamp.
+- No fake countdown.
+- Synchronize against server-provided campaign dates.
+- Handle expired campaigns correctly.
+- Stop the countdown at zero.
+- Do not allow the timer to display negative values.
+- Make the timer format configurable.
+
+### Product Pricing
+
+Display:
+
+- Original Price with strikethrough.
+- Current Promotional Price.
+- Discount Saving Badge.
+
+Example:
+
+Original Price: ৳12,999
+
+Promotional Price: ৳6,999
+
+Save: ৳6,000
+
+Use Bangladesh Taka (৳) by default.
+
+All prices must be dynamically managed through the admin campaign editor.
+
+Do not hardcode the sample prices.
+
+If linked to an existing product, retrieve its actual product information from the database.
+
+Never trust a client-provided price when adding a product to the cart.
+
+## Add to Cart CTA
+
+Create a large, premium Electric Blue gradient button.
+
+Example:
+
+"Add to Cart"
+
+Include:
+- Shopping cart icon.
+- White bold text.
+- Right arrow icon.
+- Smooth hover animation.
+- Proper loading state.
+- Accessible button behavior.
+
+### Functional requirements
+
+When a campaign is linked to a product:
+
+- Add the correct product to the existing cart using the existing cart architecture.
+- Use the actual product ID.
+- Respect stock availability.
+- Use the existing product variant/selection requirements.
+- Use the existing server-side price validation.
+- Respect existing cart business rules.
+- Provide existing toast feedback.
+- Never simulate a successful cart operation.
+
+Allow the administrator to configure CTA text and destination.
+
+Possible CTA actions:
+
+- Add to Cart
+- View Product
+- Open Custom Internal Page
+- Open External URL
+
+Only support actions that are safe and compatible with the existing application.
+
+## Bottom Service Benefits Bar
+
+At the bottom of the modal, create a light-blue rounded horizontal strip.
+
+Four benefit items:
+
+1. 1 Year Warranty
+2. Free Home Delivery
+3. Easy 30 Days Return
+4. 24/7 Customer Support
+
+Each item must include:
+- Blue icon.
+- Editable label.
+- Configurable visibility.
+- Configurable order.
+
+Use elegant vertical separators on desktop.
+
+---
+
+# 5. RESPONSIVE DESIGN
+
+The modal must work professionally across:
+
+- Large desktop.
+- Standard desktop.
+- Laptop.
+- Tablet.
+- Mobile.
+- Small mobile devices.
+
+Desktop:
+- Two-column product layout.
+- Left promotional content.
+- Right product showcase.
+- Horizontal pricing and benefits sections.
+
+Tablet:
+- Reduce typography and image dimensions.
+- Maintain clear content hierarchy.
+- Avoid unnecessary horizontal scrolling.
+
+Mobile:
+- Use a vertically optimized promotional layout.
+- Keep the close button accessible.
+- Product showcase must remain visually prominent.
+- Feature grid should adapt to smaller columns.
+- Pricing must remain readable.
+- CTA must be easy to tap.
+- Countdown must not overflow.
+- Benefits must stack or use a compact grid.
+- Modal must fit within the viewport and scroll internally if necessary.
+
+Use responsive CSS rather than fixed desktop dimensions.
+
+Do not allow horizontal overflow.
+
+---
+
+# 6. ADMIN DASHBOARD — SEPARATE MANAGEMENT MODULE
+
+The existing Advertisement Management module must remain untouched and functional.
+
+Create a new independent admin section:
+
+Marketing → Global Promotional Popup
+
+Suggested route:
+
+/admin/marketing/global-promotional-popup
+
+Follow the actual routing conventions of the existing project. Do not introduce this URL if it conflicts with the existing route architecture.
+
+The new module must provide complete CRUD functionality.
+
+## Campaign Dashboard
+
+Display:
+
+- Total Campaigns.
+- Active Campaigns.
+- Scheduled Campaigns.
+- Paused Campaigns.
+- Expired Campaigns.
+- Total Impressions.
+- Total Clicks.
+- Click-Through Rate.
+
+Include a professional campaign listing table.
+
+Columns:
+
+- Campaign Name.
+- Campaign Preview.
+- Campaign Type.
+- Linked Product.
+- Status.
+- Start Date.
+- End Date.
+- Impressions.
+- Clicks.
+- Actions.
+
+Available actions:
+
+- Create.
+- View.
+- Edit.
+- Duplicate.
+- Activate.
+- Pause.
+- Delete.
+
+Use confirmation dialogs for destructive actions.
+
+## Campaign Status
+
+Support:
+
+- Draft.
+- Scheduled.
+- Active.
+- Paused.
+- Expired.
+
+The backend must enforce campaign eligibility.
+
+Do not rely solely on frontend status values.
+
+## Campaign Editor
+
+Create a professional, organized campaign editor with the following sections.
+
+### A. General Settings
+
+- Campaign Name.
+- Internal Description.
+- Campaign Status.
+- Automatic Display Toggle.
+- Display Delay.
+- Start Date.
+- End Date.
+- Priority.
+- Targeting/Route Rules.
+- Campaign Visibility.
+
+### B. Design Settings
+
+- Primary Color.
+- Secondary Color.
+- Background Color.
+- Text Color.
+- Accent Color.
+- Gradient Configuration.
+- Border Radius.
+- Modal Width.
+- Typography Settings.
+- Shadow Settings.
+- Overlay Opacity.
+- Backdrop Blur.
+- Animation Style.
+
+### C. Content Editor
+
+Editable fields for:
+
+- Offer Badge.
+- Tagline.
+- Main Heading.
+- Highlighted Heading.
+- Description.
+- Discount Text.
+- Discount Percentage.
+- Feature Items.
+- CTA Label.
+- CTA Action.
+- CTA Destination.
+- Service Benefits.
+
+### D. Product and Media Settings
+
+- Product Showcase Image.
+- Desktop Image.
+- Mobile Image.
+- Image Position.
+- Image Fit.
+- Linked Product.
+- Product ID.
+- Product Display Settings.
+
+Use existing product selection and image upload infrastructure.
+
+### E. Pricing Settings
+
+Support:
+
+- Automatic Product Pricing.
+- Campaign-Specific Promotional Pricing, if the existing business rules permit it.
+- Original Price Display.
+- Discount Display.
+- Currency Selection.
+
+Never introduce a frontend-only discount that changes the actual checkout price without proper backend validation.
+
+If the promotional campaign uses a special selling price, implement the corresponding authorized backend pricing rules and ensure cart and checkout calculations remain consistent.
+
+### F. Countdown Settings
+
+- Enable/Disable Countdown.
+- Campaign Expiration Date.
+- Timer Format.
+- Custom Countdown Label.
+
+### G. Display Rules
+
+- Global Customer Storefront.
+- Selected Routes.
+- Excluded Routes.
+- Desktop Visibility.
+- Mobile Visibility.
+- Display Delay.
+- Session Frequency.
+
+By default, make the campaign globally eligible across customer-facing storefront pages.
+
+Never display customer promotional modals inside the admin dashboard.
+
+Allow route exclusions for critical authentication callbacks and payment-processing flows.
+
+### H. Advanced Settings
+
+- Campaign Priority.
+- Campaign Scheduling.
+- Enable/Disable Campaign.
+- Preview.
+- Duplicate Campaign.
+- Archive Campaign.
+
+---
+
+# 7. LIVE PREVIEW SYSTEM
+
+This is a very important requirement.
+
+The admin must be able to see the actual promotional modal design before publishing.
+
+Implement a live preview system.
+
+When an administrator edits:
+
+- Headline.
+- Description.
+- Product image.
+- Feature icons.
+- Colors.
+- Discount.
+- Prices.
+- Countdown.
+- CTA.
+- Benefits.
+
+The preview must update accordingly.
+
+Provide:
+
+- Desktop Preview.
+- Tablet Preview.
+- Mobile Preview.
+
+The preview must use the same actual modal component used by the customer storefront.
+
+Provide a Preview button that opens the modal without requiring the 20-second delay.
+
+Preview must not increment actual campaign impressions.
+
+Preview must not alter customer session states.
+
+---
+
+# 8. MONGODB DATABASE IMPLEMENTATION
+
+Inspect the existing Mongoose architecture before designing schemas.
+
+Create a separate campaign data model or extend an existing suitable model without breaking backward compatibility.
+
+Recommended campaign properties:
+
+- name
+- slug
+- description
+- campaignType
+- status
+- enabled
+- priority
+- displayDelaySeconds
+- startAt
+- endAt
+- targeting
+- excludedRoutes
+- design
+- content
+- media
+- features
+- discount
+- pricing
+- countdown
+- cta
+- benefits
+- linkedProduct
+- analytics
+- createdBy
+- updatedBy
+- createdAt
+- updatedAt
+
+Use appropriate TypeScript types and Mongoose validation.
+
+Requirements:
+
+- Proper schema validation.
+- Valid ObjectId references.
+- Indexed campaign status and scheduling fields where appropriate.
+- Unique campaign identifiers where appropriate.
+- Safe defaults.
+- Timestamps.
+- Backward-compatible changes.
+- No destructive migrations.
+
+Use MongoDB Atlas through the existing database connection.
+
+Never use MongoDB Memory Server as the production database.
+
+Do not store product images as base64 in MongoDB.
+
+Use existing Cloudinary integration for media uploads.
+
+---
+
+# 9. BACKEND API AND SECURITY
+
+Implement real backend endpoints using the existing API architecture.
+
+Required operations:
+
+- Create Campaign.
+- List Campaigns.
+- Get Campaign Details.
+- Update Campaign.
+- Delete Campaign.
+- Duplicate Campaign.
+- Activate Campaign.
+- Pause Campaign.
+- Get Active Eligible Campaign.
+- Record Campaign Impression.
+- Record Campaign Click.
+- Upload/Manage Campaign Media.
+
+Use existing API naming conventions.
+
+### Security requirements
+
+- Admin-only campaign CRUD.
+- Server-side RBAC.
+- Authentication middleware.
+- Ownership/permission checks where applicable.
+- Request validation using the existing validation framework.
+- Sanitize user-controlled content.
+- Validate URLs and CTA destinations.
+- Validate dates and campaign scheduling.
+- Protect analytics endpoints from abuse.
+- Rate-limit public tracking endpoints where appropriate.
+- Prevent unauthorized pricing changes.
+- Do not expose admin-only data in public campaign responses.
+- Never expose secrets in frontend code.
+
+The public campaign API must return only the campaign information required to render an eligible advertisement.
+
+Do not expose internal admin metadata.
+
+---
+
+# 10. ANALYTICS
+
+Track actual campaign interactions.
+
+Minimum metrics:
+
+- Impressions.
+- CTA Clicks.
+- Click-Through Rate.
+- Campaign Start Date.
+- Campaign End Date.
+
+CTR formula:
+
+CTR = (Total Clicks / Total Impressions) × 100
+
+Important:
+
+- Count an impression when the campaign actually becomes visible.
+- Do not count admin previews.
+- Avoid duplicate impressions caused by React Strict Mode or repeated API calls.
+- Track clicks only after a real user interaction.
+- Validate and rate-limit tracking requests.
+- Avoid collecting unnecessary personal information.
+- Never store sensitive customer data for advertisement analytics.
+
+Use an efficient approach that does not unnecessarily overload MongoDB.
+
+---
+
+# 11. MULTIPLE CAMPAIGNS AND PRIORITY
+
+Support multiple campaigns in the database.
+
+However, avoid opening multiple promotional modals simultaneously.
+
+Implement deterministic campaign selection.
+
+Requirements:
+
+- Only eligible campaigns can be displayed.
+- Higher priority campaigns take precedence.
+- Expired campaigns must not appear.
+- Paused campaigns must not appear.
+- Future scheduled campaigns must not appear.
+- Disabled campaigns must not appear.
+- Prevent duplicate display.
+- Define deterministic tie-breaking behavior.
+
+If no eligible campaign exists, do not display a modal.
+
+The existing advertisement system must continue operating independently.
+
+---
+
+# 12. PERFORMANCE AND ACCESSIBILITY
+
+Production requirements:
+
+- Lazy-load large promotional images.
+- Optimize Cloudinary delivery.
+- Use appropriate image sizes.
+- Avoid unnecessary rerenders.
+- Avoid unnecessary public API requests.
+- Prevent memory leaks.
+- Prevent timer leaks.
+- Handle API failures gracefully.
+- Handle missing images gracefully.
+- Provide loading and error states.
+- Use semantic HTML.
+- Support keyboard navigation.
+- Provide accessible close-button labels.
+- Follow appropriate focus management.
+- Support Escape key dismissal.
+- Respect reduced-motion preferences.
+- Maintain readable color contrast.
+
+The modal must not negatively affect the performance of existing pages.
+
+---
+
+# 13. STRICTLY PROHIBITED IMPLEMENTATION
+
+Do not:
+
+- Replace the entire application.
+- Rebuild the existing admin dashboard.
+- Remove the existing advertisement module.
+- Introduce fake campaign persistence.
+- Use localStorage as the permanent dismissal mechanism.
+- Use hardcoded campaign data in production.
+- Use hardcoded product prices.
+- Create fake countdown timers.
+- Simulate successful image uploads.
+- Simulate successful cart operations.
+- Use placeholder API endpoints.
+- Create a second database connection unnecessarily.
+- Change unrelated page layouts.
+- Modify existing URLs without a verified requirement.
+- Add unnecessary dependencies.
+- Use TypeScript any.
+- Use @ts-ignore or @ts-nocheck.
+- Use window.alert(), window.confirm(), or window.prompt().
+- Introduce destructive database resets.
+- Rewrite working components merely to make the implementation easier.
+
+Preserve the existing application's working functionality.
+
+---
+
+# 14. REQUIRED TESTING AND VERIFICATION
+
+After implementation, test the complete feature.
+
+## Customer Experience Tests
+
+1. Open the storefront.
+2. Verify the modal does not open immediately.
+3. Verify it opens after exactly the configured 20-second delay.
+4. Verify it works on multiple customer-facing routes.
+5. Navigate between routes and verify duplicate modals do not appear.
+6. Close the modal and verify it stays closed during the current session.
+7. Refresh the page and verify it does not reappear.
+8. Close the browser tab and start a new session.
+9. Verify the campaign becomes eligible again after the configured delay.
+10. Verify expired campaigns do not appear.
+11. Verify paused campaigns do not appear.
+12. Verify disabled campaigns do not appear.
+13. Verify responsive behavior on mobile and tablet.
+
+## Admin Tests
+
+Test:
+
+Create → Save → Database Persistence → Refresh → Edit → Update → Refresh → Delete.
+
+Also test:
+
+- Campaign activation.
+- Campaign pausing.
+- Scheduling.
+- Image upload.
+- Image replacement.
+- Live preview.
+- Desktop preview.
+- Mobile preview.
+- Countdown configuration.
+- Product linking.
+- CTA functionality.
+- Analytics updates.
+
+## Regression Tests
+
+Verify all existing modules still work:
+
+- Authentication.
+- Admin Dashboard.
+- Existing Advertisement Management.
+- Hero Slides.
+- Banner Management.
+- Products.
+- Categories.
+- Brands.
+- Cart.
+- Wishlist.
+- Checkout.
+- Coupons.
+- Orders.
+- Payment.
+- Cloudinary uploads.
+- Existing public routes.
+
+Run the existing build, type checks, lint checks, and relevant tests.
+
+Resolve any regressions caused by this implementation.
+
+Do not claim tests passed unless they were actually executed.
+
+---
+
+# 15. FINAL IMPLEMENTATION REPORT
+
+After completing the work, provide a concise but detailed report containing:
+
+1. Existing architecture inspected.
+2. Files created.
+3. Files modified.
+4. New MongoDB model/schema.
+5. New API endpoints.
+6. New Admin Dashboard module.
+7. New global modal integration.
+8. Session and 20-second display behavior.
+9. Image upload implementation.
+10. Cart integration.
+11. Analytics implementation.
+12. Tests executed and actual results.
+13. Build and TypeScript verification.
+14. Any environment variables required.
+15. Any remaining issues or blockers.
+
+Clearly distinguish:
+
+- VERIFIED
+- PARTIALLY IMPLEMENTED
+- BLOCKED
+- NOT TESTED
+
+Do not claim production readiness if database persistence, security, or integration remains unverified.
+
+---
+
+# FINAL NON-NEGOTIABLE INSTRUCTION
+
+This is an existing NOVARA e-commerce application.
+
+Your mission is to ADD a second, independent, globally controlled Premium Promotional Popup Advertisement System while preserving every existing feature.
+
+The new modal must closely follow the specified premium white-and-electric-blue smartwatch advertising composition.
+
+The complete campaign must be manageable from the Admin Dashboard, including content, product imagery, pricing, discount, countdown, CTA, colors, layout, scheduling, activation, and visibility.
+
+The existing advertisement functionality must remain available and unchanged.
+
+Inspect first. Understand the actual codebase. Plan carefully. Implement minimally. Integrate frontend, backend, MongoDB, Cloudinary, and existing cart functionality correctly. Test everything.
+
+**DO NOT REPLACE WHAT ALREADY WORKS. EXTEND IT SAFELY.**
